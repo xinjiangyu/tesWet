@@ -1,0 +1,1217 @@
+<html lang="zh-CN"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>欣故事 - 记录生活的每一刻</title>
+    <!-- 引入外部资源 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    
+    <!-- 引入字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Ma+Shan+Zheng&amp;family=ZCOOL+XiaoWei&amp;family=Playfair+Display:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet">
+    
+    <!-- Tailwind 配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF', // 主色调：深蓝色（雪山天空）
+                        secondary: '#36BFFA', // 辅助色：冰蓝色
+                        accent: '#FF7D00', // 强调色：橙色（与冰雪形成对比）
+                        dark: '#0F172A', // 深色文本
+                        light: '#F8FAFC', // 浅色背景
+                        snow: '#E2E8F0', // 雪白色
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif'], // 主要字体
+                        title: ['"Playfair Display"', 'serif'], // 标题字体（更具高级感）
+                        content: ['"ZCOOL XiaoWei"', 'serif'], // 内容书法字体
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <!-- 自定义工具类 -->
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .text-shadow {
+                text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            }
+            .text-shadow-lg {
+                text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            }
+            /* 钻石透明字体效果 */
+            .diamond-text {
+                background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0.9) 100%);
+                -webkit-background-clip: text;
+                background-clip: text;
+                color: transparent;
+                position: relative;
+            }
+            .diamond-text::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(45deg, transparent 0%, rgba(255,255,255,0.2) 50%, transparent 100%);
+                -webkit-background-clip: text;
+                background-clip: text;
+                opacity: 0.7;
+            }
+            /* 百叶窗渐变样式 - 重点标注 */
+            .blinds-highlight {
+                position: relative;
+                display: inline-block;
+                z-index: 1;
+                animation: blinds 3s infinite alternate;
+            }
+            .blinds-highlight::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: repeating-linear-gradient(
+                    90deg,
+                    rgba(255, 255, 255, 0.15),
+                    rgba(255, 255, 255, 0.15) 10px,
+                    rgba(255, 255, 255, 0.05) 10px,
+                    rgba(255, 255, 255, 0.05) 20px
+                );
+                z-index: -1;
+                border-radius: 4px;
+                padding: 0 8px;
+                margin: 0 -8px;
+            }
+            @keyframes blinds {
+                0% {
+                    background-position: 0% 0;
+                    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+                }
+                100% {
+                    background-position: 100% 0;
+                    box-shadow: 0 0 25px rgba(54, 191, 250, 0.6);
+                }
+            }
+            /* 强调边框效果 */
+            .highlight-border {
+                box-shadow: 0 0 0 2px rgba(54, 191, 250, 0.5),
+                            0 0 15px rgba(54, 191, 250, 0.3);
+                padding: 2px 8px;
+                border-radius: 4px;
+            }
+            /* 磨砂玻璃效果 */
+            .frosted {
+                background: rgba(255, 255, 255, 0.1);
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.18);
+            }
+            .card-hover {
+                transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            }
+            .card-hover:hover {
+                transform: translateY(-8px);
+                box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+            }
+            /* 用于视差滚动效果 */
+            .parallax-bg {
+                transition: transform 0.1s ease-out;
+            }
+            /* 雪花动画效果 */
+            .snowflake {
+                position: absolute;
+                background-color: white;
+                border-radius: 50%;
+                pointer-events: none;
+                opacity: 0.7;
+                animation: fall linear infinite;
+            }
+            @keyframes fall {
+                to {
+                    transform: translateY(100vh) rotate(360deg);
+                }
+            }
+        }
+    </style>
+</head>
+<body class="bg-dark font-inter text-light overflow-x-hidden">
+    <!-- 全局雪山背景 - 可以替换为其他雪山图片 -->
+    <div id="global-bg" class="fixed inset-0 z-0 parallax-bg">
+        <div class="absolute inset-0 bg-gradient-to-b from-dark/70 via-dark/50 to-dark/90 z-10"></div>
+        <!-- 这里是极限攀岩雪山背景图片，可以替换成你喜欢的图片 -->
+        <img src="https://p3-search.byteimg.com/obj/labis/240beda5b562e63f4b210adf392d3665" alt="极限攀岩雪山" class="w-full h-full object-cover">
+    </div>
+
+    <!-- 导航栏 -->
+    <nav id="main-nav" class="fixed w-full top-0 z-50 transition-all duration-500">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center frosted shadow-lg">
+            <!-- 网站 Logo - 钻石透明字体效果 -->
+            <a href="#home" class="text-2xl md:text-3xl font-title diamond-text tracking-wider">欣·故事</a>
+            
+            <!-- 桌面端导航菜单 -->
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="#home" class="hover:text-secondary transition-colors duration-300 relative group">
+                    首页
+                    <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-secondary transition-all duration-300 group-hover:w-full"></span>
+                </a>
+                <a href="#travel" class="hover:text-secondary transition-colors duration-300 relative group">
+                    旅行日记
+                    <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-secondary transition-all duration-300 group-hover:w-full"></span>
+                </a>
+                <a href="#photos" class="hover:text-secondary transition-colors duration-300 relative group">
+                    风景合集
+                    <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-secondary transition-all duration-300 group-hover:w-full"></span>
+                </a>
+                <a href="#music" class="hover:text-secondary transition-colors duration-300 relative group">
+                    我的音乐
+                    <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-secondary transition-all duration-300 group-hover:w-full"></span>
+                </a>
+                <a href="#behind" class="hover:text-secondary transition-colors duration-300 relative group">
+                    创作幕后
+                    <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-secondary transition-all duration-300 group-hover:w-full"></span>
+                </a>
+                <a href="#message" class="hover:text-secondary transition-colors duration-300 relative group">
+                    留言板
+                    <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-secondary transition-all duration-300 group-hover:w-full"></span>
+                </a>
+                <a href="#store" class="hover:text-secondary transition-colors duration-300 relative group">
+                    照片商店
+                    <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-secondary transition-all duration-300 group-hover:w-full"></span>
+                </a>
+            </div>
+            
+            <!-- 移动端菜单按钮 -->
+            <button id="menu-toggle" class="md:hidden text-light text-xl focus:outline-none">
+                <i class="fa fa-bars"></i>
+            </button>
+        </div>
+        
+        <!-- 移动端导航菜单 (默认隐藏) -->
+        <div id="mobile-menu" class="hidden md:hidden frosted shadow-md">
+            <div class="container mx-auto px-4 py-4 flex flex-col space-y-4">
+                <a href="#home" class="py-2 hover:text-secondary transition-colors">首页</a>
+                <a href="#travel" class="py-2 hover:text-secondary transition-colors">旅行日记</a>
+                <a href="#photos" class="py-2 hover:text-secondary transition-colors">风景合集</a>
+                <a href="#music" class="py-2 hover:text-secondary transition-colors">我的音乐</a>
+                <a href="#behind" class="py-2 hover:text-secondary transition-colors">创作幕后</a>
+                <a href="#message" class="py-2 hover:text-secondary transition-colors">留言板</a>
+                <a href="#store" class="py-2 hover:text-secondary transition-colors">照片商店</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 首页英雄区域 -->
+    <section id="home" class="pt-24 md:pt-0 min-h-screen flex items-center relative overflow-hidden">
+        <!-- 背景视觉效果 - 雪山图片已在全局背景设置 -->
+        
+        <div class="container mx-auto px-4 py-16 relative z-20">
+            <div class="max-w-2xl">
+                <!-- 钻石透明字体标题 -->
+                <h1 class="text-[clamp(2.5rem,6vw,4.5rem)] font-title leading-tight text-shadow-lg mb-6">
+                    用镜头和文字<br>记录我的<span class="diamond-text blinds-highlight highlight-border">旅行足迹</span>
+                </h1>
+                <p class="text-[clamp(1rem,2vw,1.25rem)] text-white/90 mb-8 max-w-xl">
+                    我是一名热爱摄影和旅行的男生，足迹遍布大山与大海。这里记录着我的旅行故事、壮丽景色和难忘瞬间。
+                </p>
+                <div class="flex flex-wrap gap-4">
+                    <a href="#travel" class="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-full transition-all shadow-lg hover:shadow-primary/30">
+                        浏览旅行日记
+                    </a>
+                    <a href="#photos" class="frosted hover:bg-white/20 text-white px-6 py-3 rounded-full transition-all">
+                        查看雪山照片
+                    </a>
+                </div>
+                
+                <!-- 社交媒体链接 - 可以替换成你的社交账号链接 -->
+                <div class="mt-12 flex space-x-6">
+                    <a href="#" class="text-white hover:text-secondary transition-colors text-xl" title="微信">
+                        <i class="fa fa-weixin"></i>
+                    </a>
+                    <a href="#" class="text-white hover:text-secondary transition-colors text-xl" title="微博">
+                        <i class="fa fa-weibo"></i>
+                    </a>
+                    <a href="#" class="text-white hover:text-secondary transition-colors text-xl" title="抖音">
+                        <i class="fa fa-music"></i>
+                    </a>
+                    <a href="#" class="text-white hover:text-secondary transition-colors text-xl" title="小红书">
+                        <i class="fa fa-book"></i>
+                    </a>
+                    <a href="#" class="text-white hover:text-secondary transition-colors text-xl" title="Instagram">
+                        <i class="fa fa-instagram"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 向下滚动指示 -->
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 text-white animate-bounce">
+            <a href="#about" class="flex flex-col items-center">
+                <span class="mb-2 text-sm">向下滚动</span>
+                <i class="fa fa-chevron-down"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- 关于我 -->
+    <section id="about" class="py-20 relative">
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="frosted rounded-2xl p-8 md:p-12 shadow-xl">
+                <div class="flex flex-col md:flex-row items-center gap-12">
+                    <!-- 个人照片 - 可以替换成你的照片 -->
+                    <div class="w-full md:w-1/3">
+                        <div class="relative">
+                            <div class="absolute -top-4 -left-4 w-full h-full bg-primary/20 rounded-lg"></div>
+                            <img src="<a href="https://imgtu.com/zh/upload/0y86ol6u/cgi-bin_mmwebwx-bin_webwxgetmsgimg_msgid" target="_blank"><img src="https://imgtu.com/uploads/0y86ol6u/r-cgi-bin_mmwebwx-bin_webwxgetmsgimg_msgid.webp" alt="cgi-bin_mmwebwx-bin_webwxgetmsgimg_MsgID.jpg" border="0"/></a>" alt="在拉萨的个人照片" class="w-full h-auto rounded-lg shadow-xl relative z-10">
+                        </div>
+                    </div>
+                    
+                    <!-- 个人介绍 - 可以修改这里的文字内容 -->
+                    <div class="w-full md:w-2/3">
+                        <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-title mb-6 diamond-text">关于我</h2>
+                        <p class="text-lg mb-4">大家好！我是一名普通的大学生，目前已经毕业一年了。除了学习之外，我最大的爱好是登山、旅行和摄影。</p>
+                        <p class="text-lg mb-4">从大一开始，我就开始关注国内的许多景点，每次的独自旅行和攀登都是对自我的挑战和超越。</p>
+                        <p class="text-lg mb-6">这个网站记录了我的攀登故事、摄影作品和旅行感悟。希望通过我的镜头和文字，能让你感受到山川的壮丽和魅力，也能激励更多同龄人走出舒适区，挑战自我。</p>
+                        
+                        <!-- 兴趣爱好 - 可以修改这里的内容 -->
+                        <div class="flex flex-wrap gap-3">
+                            <span class="bg-primary/10 text-secondary px-4 py-2 rounded-full text-sm">登山</span>
+                            <span class="bg-secondary/10 text-primary px-4 py-2 rounded-full text-sm">攀岩</span>
+                            <span class="bg-accent/10 text-accent px-4 py-2 rounded-full text-sm">摄影</span>
+                            <span class="bg-white/10 text-white px-4 py-2 rounded-full text-sm">旅行</span>
+                            <span class="bg-primary/10 text-secondary px-4 py-2 rounded-full text-sm">徒步</span>
+                            <span class="bg-secondary/10 text-primary px-4 py-2 rounded-full text-sm">露营</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 旅行日记 -->
+    <section id="travel" class="py-20 relative">
+        <div class="container mx-auto px-4 relative z-10">
+            <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-title text-center mb-4 diamond-text">旅行日记</h2>
+            <p class="text-center text-gray-300 max-w-2xl mx-auto mb-16">记录每一次攀登的点滴感悟，分享雪山中的美丽风景和惊险故事</p>
+            
+            <!-- 旅行日记卡片 - 可以添加更多日记卡片 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- 日记卡片 1 - 可以修改内容和图片 -->
+                <div class="frosted rounded-xl overflow-hidden shadow-md card-hover">
+                    <div class="h-56 overflow-hidden">
+                        <!-- 可以替换图片：将下面的src地址替换成其他雪山图片链接 -->
+                        <img src="https://picsum.photos/id/15/800/600" alt="西藏纳木错" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center text-sm text-gray-300 mb-3">
+                            <i class="fa fa-calendar-o mr-2"></i>
+                            <span>2023年7月15日</span>
+                            <i class="fa fa-map-marker ml-4 mr-2"></i>
+                            <span>西藏 · 纳木错</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 text-white">纳木错的星空，一生难忘的夜晚</h3>
+                        <p class="text-gray-300 mb-4 line-clamp-3">
+                            当夜幕降临，纳木错的星空美得让人窒息。银河清晰可见，仿佛伸手就能触摸到。在海拔4700米的地方，虽然呼吸有些困难，但这样的美景值得所有付出...
+                        </p>
+                        <a href="#" class="text-secondary hover:text-primary font-medium flex items-center transition-colors">
+                            阅读全文 <i class="fa fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 日记卡片 2 - 可以修改内容和图片 -->
+                <div class="frosted rounded-xl overflow-hidden shadow-md card-hover">
+                    <div class="h-56 overflow-hidden">
+                        <!-- 可以替换图片：将下面的src地址替换成其他雪山图片链接 -->
+                        <img src="https://picsum.photos/id/29/800/600" alt="雪山攀登" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center text-sm text-gray-300 mb-3">
+                            <i class="fa fa-calendar-o mr-2"></i>
+                            <span>2023年5月2日</span>
+                            <i class="fa fa-map-marker ml-4 mr-2"></i>
+                            <span>四川 · 四姑娘山</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 text-white">四姑娘山二峰冲顶，挑战自我极限</h3>
+                        <p class="text-gray-300 mb-4 line-clamp-3">
+                            凌晨2点从营地出发，顶着零下15度的寒风向顶峰冲刺。雪深及膝，每一步都异常艰难。当第一缕阳光洒在雪山上时，我知道所有的坚持都是值得的...
+                        </p>
+                        <a href="#" class="text-secondary hover:text-primary font-medium flex items-center transition-colors">
+                            阅读全文 <i class="fa fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 日记卡片 3 - 可以修改内容和图片 -->
+                <div class="frosted rounded-xl overflow-hidden shadow-md card-hover">
+                    <div class="h-56 overflow-hidden">
+                        <!-- 可以替换图片：将下面的src地址替换成其他雪山图片链接 -->
+                        <img src="https://picsum.photos/id/28/800/600" alt="壶口瀑布" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center text-sm text-gray-300 mb-3">
+                            <i class="fa fa-calendar-o mr-2"></i>
+                            <span>2023年10月1日</span>
+                            <i class="fa fa-map-marker ml-4 mr-2"></i>
+                            <span>山西 · 壶口瀑布</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 text-white">壶口瀑布，感受黄河的咆哮</h3>
+                        <p class="text-gray-300 mb-4 line-clamp-3">
+                            "黄河之水天上来，奔流到海不复回"。亲眼见到壶口瀑布，才能真正体会到这句诗的磅礴气势。浑浊的河水奔腾而下，激起巨大的水花和轰鸣声，震撼人心...
+                        </p>
+                        <a href="#" class="text-secondary hover:text-primary font-medium flex items-center transition-colors">
+                            阅读全文 <i class="fa fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 查看更多按钮 -->
+            <div class="text-center mt-12">
+                <a href="#" class="inline-block bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-full transition-all shadow-lg hover:shadow-primary/30">
+                    查看更多日记 <i class="fa fa-long-arrow-right ml-2"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 风景图片合集 -->
+    <section id="photos" class="py-20 relative">
+        <div class="container mx-auto px-4 relative z-10">
+            <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-title text-center mb-4 diamond-text">雪山风景合集</h2>
+            <p class="text-center text-gray-300 max-w-2xl mx-auto mb-16">用镜头捕捉雪山的壮丽景色，每一张照片都有一个故事</p>
+            
+            <!-- 照片分类标签 - 可以添加更多分类 -->
+            <div class="flex flex-wrap justify-center gap-4 mb-12">
+                <button class="bg-primary text-white px-5 py-2 rounded-full text-sm">全部</button>
+                <button class="frosted hover:bg-white/20 px-5 py-2 rounded-full text-sm transition-colors">雪山</button>
+                <button class="frosted hover:bg-white/20 px-5 py-2 rounded-full text-sm transition-colors">冰川</button>
+                <button class="frosted hover:bg-white/20 px-5 py-2 rounded-full text-sm transition-colors">瀑布</button>
+                <button class="frosted hover:bg-white/20 px-5 py-2 rounded-full text-sm transition-colors">高原</button>
+                <button class="frosted hover:bg-white/20 px-5 py-2 rounded-full text-sm transition-colors">湖泊</button>
+                <button class="frosted hover:bg-white/20 px-5 py-2 rounded-full text-sm transition-colors">日出日落</button>
+            </div>
+            
+            <!-- 照片网格 - 可以添加更多照片 -->
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                <!-- 照片 1 - 可以替换图片和信息 -->
+                <div class="group relative overflow-hidden rounded-lg card-hover aspect-square">
+                    <img src="https://picsum.photos/id/29/600/600" alt="珠穆朗玛峰" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-dark/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-4">
+                        <h3 class="text-white font-bold">珠穆朗玛峰</h3>
+                        <p class="text-white/80 text-sm">西藏 · 2023年8月</p>
+                    </div>
+                </div>
+                
+                <!-- 照片 2 - 可以替换图片和信息 -->
+                <div class="group relative overflow-hidden rounded-lg card-hover aspect-square">
+                    <img src="https://picsum.photos/id/28/600/600" alt="壶口瀑布" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-dark/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-4">
+                        <h3 class="text-white font-bold">壶口瀑布</h3>
+                        <p class="text-white/80 text-sm">山西 · 2023年10月</p>
+                    </div>
+                </div>
+                
+                <!-- 照片 3 - 可以替换图片和信息 -->
+                <div class="group relative overflow-hidden rounded-lg card-hover aspect-square">
+                    <img src="https://picsum.photos/id/15/600/600" alt="纳木错" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-dark/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-4">
+                        <h3 class="text-white font-bold">纳木错</h3>
+                        <p class="text-white/80 text-sm">西藏 · 2023年7月</p>
+                    </div>
+                </div>
+                
+                <!-- 照片 4 - 可以替换图片和信息 -->
+                <div class="group relative overflow-hidden rounded-lg card-hover aspect-square">
+                    <img src="https://picsum.photos/id/18/600/600" alt="雪山攀登" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-dark/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-4">
+                        <h3 class="text-white font-bold">四姑娘山</h3>
+                        <p class="text-white/80 text-sm">四川 · 2023年5月</p>
+                    </div>
+                </div>
+                
+                <!-- 照片 5 - 可以替换图片和信息 -->
+                <div class="group relative overflow-hidden rounded-lg card-hover aspect-square">
+                    <img src="https://picsum.photos/id/26/600/600" alt="雪山风景" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-dark/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-4">
+                        <h3 class="text-white font-bold">梅里雪山</h3>
+                        <p class="text-white/80 text-sm">云南 · 2023年11月</p>
+                    </div>
+                </div>
+                
+                <!-- 照片 6 - 可以替换图片和信息 -->
+                <div class="group relative overflow-hidden rounded-lg card-hover aspect-square">
+                    <img src="https://picsum.photos/id/25/600/600" alt="雪山湖泊" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-dark/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-4">
+                        <h3 class="text-white font-bold">然乌湖</h3>
+                        <p class="text-white/80 text-sm">西藏 · 2023年9月</p>
+                    </div>
+                </div>
+                
+                <!-- 照片 7 - 可以替换图片和信息 -->
+                <div class="group relative overflow-hidden rounded-lg card-hover aspect-square">
+                    <img src="https://picsum.photos/id/30/600/600" alt="雪山日出" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-dark/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-4">
+                        <h3 class="text-white font-bold">贡嘎雪山</h3>
+                        <p class="text-white/80 text-sm">四川 · 2023年4月</p>
+                    </div>
+                </div>
+                
+                <!-- 照片 8 - 可以替换图片和信息 -->
+                <div class="group relative overflow-hidden rounded-lg card-hover aspect-square">
+                    <img src="https://picsum.photos/id/27/600/600" alt="雪山冰川" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-dark/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-4">
+                        <h3 class="text-white font-bold">米堆冰川</h3>
+                        <p class="text-white/80 text-sm">西藏 · 2023年6月</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 查看更多按钮 -->
+            <div class="text-center mt-12">
+                <a href="#" class="inline-block bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-full transition-all shadow-lg hover:shadow-primary/30">
+                    查看全部照片 <i class="fa fa-picture-o ml-2"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 我的音乐 -->
+    <section id="music" class="py-20 relative">
+        <div class="container mx-auto px-4 relative z-10">
+            <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-title text-center mb-4 diamond-text">登山必备音乐</h2>
+            <p class="text-center text-gray-300 max-w-2xl mx-auto mb-16">攀登途中总少不了音乐的陪伴，这些是我最喜欢的歌曲</p>
+            
+            <!-- 音乐播放器区域 -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
+                <!-- 网易云音乐播放器 - 可以替换成你自己的播放器链接 -->
+                <div class="frosted p-6 rounded-xl shadow-md">
+                    <h3 class="text-xl font-bold mb-4 flex items-center text-white">
+                        <i class="fa fa-music text-red-500 mr-2"></i> 网易云音乐播放列表
+                    </h3>
+                    <!-- 这里是网易云音乐播放器，可以替换成你自己的歌单 -->
+                    <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="100%" height="330" src="https://music.163.com/outchain/player?type=0&amp;id=2481312407&amp;auto=1&amp;height=330">
+                    </iframe>
+                </div>
+                
+                <!-- QQ音乐播放器 - 可以替换成你自己的播放器链接 -->
+                <div class="frosted p-6 rounded-xl shadow-md">
+                    <h3 class="text-xl font-bold mb-4 flex items-center text-white">
+                        <i class="fa fa-headphones text-green-500 mr-2"></i> QQ音乐播放列表
+                    </h3>
+                    <!-- 这里是QQ音乐播放器，可以替换成你自己的歌单 -->
+                    <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="100%" height="330" src="https://y.qq.com/w/player.html?vid=u00328t08g6">
+                    </iframe>
+                </div>
+            </div>
+            
+            <!-- 我喜欢的单曲 - 可以添加更多歌曲 -->
+            <h3 class="text-xl font-bold mb-8 text-center text-white">登山必备单曲</h3>
+            <div class="relative">
+                <!-- 横向滚动的歌曲列表 -->
+                <div class="overflow-x-auto scrollbar-hide pb-4">
+                    <div class="flex space-x-6 w-max">
+                        <!-- 歌曲 1 - 可以修改歌曲信息和图片 -->
+                        <div class="w-48 flex-shrink-0 frosted rounded-lg overflow-hidden shadow-md card-hover">
+                            <img src="https://picsum.photos/id/65/300/300" alt="歌曲封面" class="w-full h-48 object-cover">
+                            <div class="p-4">
+                                <h4 class="font-bold mb-1 truncate text-white">平凡之路</h4>
+                                <p class="text-sm text-gray-300 mb-2">朴树</p>
+                                <button class="w-full bg-primary/10 hover:bg-primary/20 text-secondary py-2 rounded-full text-sm transition-colors flex items-center justify-center">
+                                    <i class="fa fa-play mr-2"></i> 播放
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- 歌曲 2 - 可以修改歌曲信息和图片 -->
+                        <div class="w-48 flex-shrink-0 frosted rounded-lg overflow-hidden shadow-md card-hover">
+                            <img src="https://picsum.photos/id/68/300/300" alt="歌曲封面" class="w-full h-48 object-cover">
+                            <div class="p-4">
+                                <h4 class="font-bold mb-1 truncate text-white">曾经的你</h4>
+                                <p class="text-sm text-gray-300 mb-2">许巍</p>
+                                <button class="w-full bg-primary/10 hover:bg-primary/20 text-secondary py-2 rounded-full text-sm transition-colors flex items-center justify-center">
+                                    <i class="fa fa-play mr-2"></i> 播放
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- 歌曲 3 - 可以修改歌曲信息和图片 -->
+                        <div class="w-48 flex-shrink-0 frosted rounded-lg overflow-hidden shadow-md card-hover">
+                            <img src="https://picsum.photos/id/69/300/300" alt="歌曲封面" class="w-full h-48 object-cover">
+                            <div class="p-4">
+                                <h4 class="font-bold mb-1 truncate text-white">蓝莲花</h4>
+                                <p class="text-sm text-gray-300 mb-2">许巍</p>
+                                <button class="w-full bg-primary/10 hover:bg-primary/20 text-secondary py-2 rounded-full text-sm transition-colors flex items-center justify-center">
+                                    <i class="fa fa-play mr-2"></i> 播放
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- 歌曲 4 - 可以修改歌曲信息和图片 -->
+                        <div class="w-48 flex-shrink-0 frosted rounded-lg overflow-hidden shadow-md card-hover">
+                            <img src="https://picsum.photos/id/70/300/300" alt="歌曲封面" class="w-full h-48 object-cover">
+                            <div class="p-4">
+                                <h4 class="font-bold mb-1 truncate text-white">追梦赤子心</h4>
+                                <p class="text-sm text-gray-300 mb-2">GALA乐队</p>
+                                <button class="w-full bg-primary/10 hover:bg-primary/20 text-secondary py-2 rounded-full text-sm transition-colors flex items-center justify-center">
+                                    <i class="fa fa-play mr-2"></i> 播放
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- 歌曲 5 - 可以修改歌曲信息和图片 -->
+                        <div class="w-48 flex-shrink-0 frosted rounded-lg overflow-hidden shadow-md card-hover">
+                            <img src="https://picsum.photos/id/71/300/300" alt="歌曲封面" class="w-full h-48 object-cover">
+                            <div class="p-4">
+                                <h4 class="font-bold mb-1 truncate text-white">我相信</h4>
+                                <p class="text-sm text-gray-300 mb-2">杨培安</p>
+                                <button class="w-full bg-primary/10 hover:bg-primary/20 text-secondary py-2 rounded-full text-sm transition-colors flex items-center justify-center">
+                                    <i class="fa fa-play mr-2"></i> 播放
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 滚动指示器 -->
+                <div class="absolute top-1/2 -left-4 transform -translate-y-1/2 hidden md:block">
+                    <button class="w-10 h-10 rounded-full frosted flex items-center justify-center hover:bg-white/20 transition-colors">
+                        <i class="fa fa-chevron-left"></i>
+                    </button>
+                </div>
+                <div class="absolute top-1/2 -right-4 transform -translate-y-1/2 hidden md:block">
+                    <button class="w-10 h-10 rounded-full frosted flex items-center justify-center hover:bg-white/20 transition-colors">
+                        <i class="fa fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 创作幕后 -->
+    <section id="behind" class="py-20 relative">
+        <div class="container mx-auto px-4 relative z-10">
+            <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-title text-center mb-4 diamond-text">登山幕后</h2>
+            <p class="text-center text-gray-300 max-w-2xl mx-auto mb-16">分享我的登山日常、拍摄花絮和装备指南</p>
+            
+            <!-- 幕后内容卡片 - 可以添加更多卡片 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- 幕后内容 1 - 可以修改内容和图片 -->
+                <div class="frosted rounded-xl overflow-hidden shadow-md flex flex-col md:flex-row card-hover">
+                    <div class="w-full md:w-1/2">
+                        <!-- 可以替换图片：将下面的src地址替换成其他图片链接 -->
+                        <img src="https://picsum.photos/id/96/600/400" alt="登山装备" class="w-full h-full object-cover">
+                    </div>
+                    <div class="w-full md:w-1/2 p-6 flex flex-col justify-center">
+                        <span class="text-sm text-secondary font-medium mb-2">登山装备</span>
+                        <h3 class="text-xl font-bold mb-3 text-white">雪山攀登必备装备清单</h3>
+                        <p class="text-gray-300 mb-4">
+                            雪山攀登装备至关重要，直接关系到安全和舒适。我通常会携带这些装备：高山靴、冰爪、冰镐、安全带、头盔、冲锋衣裤、保暖层、登山杖...
+                        </p>
+                        <a href="#" class="text-secondary hover:text-primary font-medium flex items-center self-start transition-colors">
+                            了解更多 <i class="fa fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 幕后内容 2 - 可以修改内容和图片 -->
+                <div class="frosted rounded-xl overflow-hidden shadow-md flex flex-col md:flex-row card-hover">
+                    <div class="w-full md:w-1/2">
+                        <!-- 可以替换图片：将下面的src地址替换成其他图片链接 -->
+                        <img src="https://picsum.photos/id/91/600/400" alt="拍摄花絮" class="w-full h-full object-cover">
+                    </div>
+                    <div class="w-full md:w-1/2 p-6 flex flex-col justify-center">
+                        <span class="text-sm text-secondary font-medium mb-2">拍摄花絮</span>
+                        <h3 class="text-xl font-bold mb-3 text-white">在雪山拍摄的艰难与收获</h3>
+                        <p class="text-gray-300 mb-4">
+                            为了拍摄一张完美的雪山日出，我凌晨2点就起床，在零下20度的环境中等待了3个多小时。相机电池在低温下消耗很快，我不得不把备用电池放在怀里保暖...
+                        </p>
+                        <a href="#" class="text-secondary hover:text-primary font-medium flex items-center self-start transition-colors">
+                            了解更多 <i class="fa fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 幕后内容 3 - 可以修改内容和图片 -->
+                <div class="frosted rounded-xl overflow-hidden shadow-md flex flex-col md:flex-row card-hover">
+                    <div class="w-full md:w-1/2">
+                        <!-- 可以替换图片：将下面的src地址替换成其他图片链接 -->
+                        <img src="https://picsum.photos/id/93/600/400" alt="营地生活" class="w-full h-full object-cover">
+                    </div>
+                    <div class="w-full md:w-1/2 p-6 flex flex-col justify-center">
+                        <span class="text-sm text-secondary font-medium mb-2">营地生活</span>
+                        <h3 class="text-xl font-bold mb-3 text-white">雪山营地的夜晚是什么样的</h3>
+                        <p class="text-gray-300 mb-4">
+                            雪山营地的夜晚既安静又热闹。远离城市光污染，星空格外明亮。队友们围坐在帐篷里分享故事，煮着热腾腾的食物，虽然条件艰苦，但内心充实...
+                        </p>
+                        <a href="#" class="text-secondary hover:text-primary font-medium flex items-center self-start transition-colors">
+                            了解更多 <i class="fa fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 幕后内容 4 - 可以修改内容和图片 -->
+                <div class="frosted rounded-xl overflow-hidden shadow-md flex flex-col md:flex-row card-hover">
+                    <div class="w-full md:w-1/2">
+                        <!-- 可以替换图片：将下面的src地址替换成其他图片链接 -->
+                        <img src="https://picsum.photos/id/94/600/400" alt="高山反应" class="w-full h-full object-cover">
+                    </div>
+                    <div class="w-full md:w-1/2 p-6 flex flex-col justify-center">
+                        <span class="text-sm text-secondary font-medium mb-2">登山知识</span>
+                        <h3 class="text-xl font-bold mb-3 text-white">如何应对高山反应</h3>
+                        <p class="text-gray-300 mb-4">
+                            高山反应是登山者最常见的问题。我的经验是：缓慢上升，充分适应；多喝水，保持体内水分；避免剧烈运动；保证充足睡眠；携带必要的药品...
+                        </p>
+                        <a href="#" class="text-secondary hover:text-primary font-medium flex items-center self-start transition-colors">
+                            了解更多 <i class="fa fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 留言板 -->
+    <section id="message" class="py-20 relative">
+        <div class="container mx-auto px-4 relative z-10">
+            <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-title text-center mb-4 diamond-text">留言板</h2>
+            <p class="text-center text-gray-300 max-w-2xl mx-auto mb-16">欢迎留下你的评论和建议，我会尽快回复</p>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- 留言表单 -->
+                <div class="lg:col-span-1">
+                    <div class="frosted p-6 rounded-xl shadow-md">
+                        <h3 class="text-xl font-bold mb-4 text-white">写下你的留言</h3>
+                        <form>
+                            <div class="mb-4">
+                                <label for="name" class="block text-sm font-medium text-gray-300 mb-1">你的名字</label>
+                                <input type="text" id="name" class="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-lg focus:ring-2 focus:ring-secondary focus:border-secondary transition-colors text-white" placeholder="请输入你的名字">
+                            </div>
+                            <div class="mb-4">
+                                <label for="email" class="block text-sm font-medium text-gray-300 mb-1">电子邮箱</label>
+                                <input type="email" id="email" class="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-lg focus:ring-2 focus:ring-secondary focus:border-secondary transition-colors text-white" placeholder="请输入你的邮箱">
+                            </div>
+                            <div class="mb-4">
+                                <label for="message" class="block text-sm font-medium text-gray-300 mb-1">留言内容</label>
+                                <textarea id="message" rows="5" class="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-lg focus:ring-2 focus:ring-secondary focus:border-secondary transition-colors text-white" placeholder="请输入你的留言内容"></textarea>
+                            </div>
+                            <button type="submit" class="w-full bg-primary hover:bg-primary/90 text-white py-3 rounded-lg transition-colors shadow-lg hover:shadow-primary/30">
+                                提交留言
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- 留言列表 -->
+                <div class="lg:col-span-2">
+                    <div class="frosted p-6 rounded-xl shadow-md">
+                        <h3 class="text-xl font-bold mb-6 text-white">最新留言</h3>
+                        
+                        <!-- 留言 1 - 可以修改留言内容 -->
+                        <div class="border-b border-white/10 pb-6 mb-6">
+                            <div class="flex items-center mb-3">
+                                <img src="https://picsum.photos/id/64/100/100" alt="用户头像" class="w-10 h-10 rounded-full object-cover mr-3">
+                                <div>
+                                    <h4 class="font-bold text-white">张明</h4>
+                                    <p class="text-sm text-gray-400">2023年10月15日</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-300">你的西藏旅行照片太震撼了！我也计划明年暑假去西藏，能分享一下你的旅行路线和装备清单吗？谢谢！</p>
+                            <div class="mt-3 flex items-center">
+                                <button class="text-gray-400 hover:text-secondary text-sm mr-4 transition-colors">
+                                    <i class="fa fa-thumbs-o-up mr-1"></i> 点赞 (12)
+                                </button>
+                                <button class="text-gray-400 hover:text-secondary text-sm transition-colors">
+                                    <i class="fa fa-reply mr-1"></i> 回复
+                                </button>
+                            </div>
+                            
+                            <!-- 博主回复 -->
+                            <div class="mt-4 ml-13 bg-white/5 p-4 rounded-lg">
+                                <div class="flex items-center mb-2">
+                                    <img src="https://picsum.photos/id/1012/100/100" alt="博主头像" class="w-8 h-8 rounded-full object-cover mr-2">
+                                    <div>
+                                        <h5 class="font-bold text-sm text-white">博主回复</h5>
+                                        <p class="text-xs text-gray-400">2023年10月16日</p>
+                                    </div>
+                                </div>
+                                <p class="text-gray-300 text-sm">谢谢你的喜欢！我整理了一份详细的西藏旅行攻略，包含路线、预算和装备清单，稍后会私信发给你~</p>
+                            </div>
+                        </div>
+                        
+                        <!-- 留言 2 - 可以修改留言内容 -->
+                        <div class="border-b border-white/10 pb-6 mb-6">
+                            <div class="flex items-center mb-3">
+                                <img src="https://picsum.photos/id/65/100/100" alt="用户头像" class="w-10 h-10 rounded-full object-cover mr-3">
+                                <div>
+                                    <h4 class="font-bold text-white">李华</h4>
+                                    <p class="text-sm text-gray-400">2023年10月10日</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-300">作为一名同样喜欢登山的大学生，很欣赏你的勇气！想请教一下，你是如何平衡学业和登山的呢？感觉时间总是不够用。</p>
+                            <div class="mt-3 flex items-center">
+                                <button class="text-gray-400 hover:text-secondary text-sm mr-4 transition-colors">
+                                    <i class="fa fa-thumbs-o-up mr-1"></i> 点赞 (8)
+                                </button>
+                                <button class="text-gray-400 hover:text-secondary text-sm transition-colors">
+                                    <i class="fa fa-reply mr-1"></i> 回复
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- 留言 3 - 可以修改留言内容 -->
+                        <div class="pb-6">
+                            <div class="flex items-center mb-3">
+                                <img src="https://picsum.photos/id/66/100/100" alt="用户头像" class="w-10 h-10 rounded-full object-cover mr-3">
+                                <div>
+                                    <h4 class="font-bold text-white">王芳</h4>
+                                    <p class="text-sm text-gray-400">2023年10月5日</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-300">你的照片拍得太棒了！用的什么相机和镜头呢？我也想买一套适合户外拍摄的设备，但预算有限，能给点建议吗？</p>
+                            <div class="mt-3 flex items-center">
+                                <button class="text-gray-400 hover:text-secondary text-sm mr-4 transition-colors">
+                                    <i class="fa fa-thumbs-o-up mr-1"></i> 点赞 (15)
+                                </button>
+                                <button class="text-gray-400 hover:text-secondary text-sm transition-colors">
+                                    <i class="fa fa-reply mr-1"></i> 回复
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- 查看更多留言 -->
+                        <div class="text-center mt-6">
+                            <a href="#" class="inline-block text-secondary hover:text-primary font-medium transition-colors">
+                                查看更多留言 <i class="fa fa-angle-down ml-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 照片商店 -->
+    <section id="store" class="py-20 relative">
+        <div class="container mx-auto px-4 relative z-10">
+            <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-title text-center mb-4 diamond-text">照片商店</h2>
+            <p class="text-center text-gray-300 max-w-2xl mx-auto mb-16">精选雪山摄影作品，可购买高清电子版或实体打印</p>
+            
+            <!-- 照片商品 - 可以添加更多商品 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- 商品 1 - 可以修改商品信息和图片 -->
+                <div class="frosted rounded-xl overflow-hidden shadow-md card-hover">
+                    <div class="relative">
+                        <!-- 可以替换图片：将下面的src地址替换成其他图片链接 -->
+                        <img src="https://picsum.photos/id/29/600/400" alt="珠穆朗玛峰照片" class="w-full h-64 object-cover">
+                        <div class="absolute top-4 right-4 bg-primary text-white text-sm font-bold px-3 py-1 rounded-full">
+                            热门
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2 text-white">珠穆朗玛峰日出</h3>
+                        <p class="text-gray-300 mb-4">高清摄影作品，记录珠峰壮丽日出瞬间</p>
+                        <div class="flex justify-between items-center mb-4">
+                            <div>
+                                <span class="text-2xl font-bold text-white">¥59</span>
+                                <span class="text-gray-400 line-through ml-2">¥89</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fa fa-star text-yellow-400"></i>
+                                <i class="fa fa-star text-yellow-400"></i>
+                                <i class="fa fa-star text-yellow-400"></i>
+                                <i class="fa fa-star text-yellow-400"></i>
+                                <i class="fa fa-star-half-o text-yellow-400"></i>
+                                <span class="text-gray-400 text-sm ml-1">(24)</span>
+                            </div>
+                        </div>
+                        <div class="flex gap-3">
+                            <button class="flex-1 bg-primary hover:bg-primary/90 text-white py-2 rounded-lg transition-colors shadow-lg hover:shadow-primary/30">
+                                购买电子版
+                            </button>
+                            <button class="flex-1 bg-white/10 hover:bg-white/20 text-white py-2 rounded-lg transition-colors">
+                                实体打印
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 商品 2 - 可以修改商品信息和图片 -->
+                <div class="frosted rounded-xl overflow-hidden shadow-md card-hover">
+                    <div class="relative">
+                        <!-- 可以替换图片：将下面的src地址替换成其他图片链接 -->
+                        <img src="https://picsum.photos/id/28/600/400" alt="壶口瀑布照片" class="w-full h-64 object-cover">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2 text-white">壶口瀑布咆哮</h3>
+                        <p class="text-gray-300 mb-4">高清摄影作品，展现黄河的磅礴气势</p>
+                        <div class="flex justify-between items-center mb-4">
+                            <div>
+                                <span class="text-2xl font-bold text-white">¥49</span>
+                                <span class="text-gray-400 line-through ml-2">¥69</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fa fa-star text-yellow-400"></i>
+                                <i class="fa fa-star text-yellow-400"></i>
+                                <i class="fa fa-star text-yellow-400"></i>
+                                <i class="fa fa-star text-yellow-400"></i>
+                                <i class="fa fa-star-o text-yellow-400"></i>
+                                <span class="text-gray-400 text-sm ml-1">(18)</span>
+                            </div>
+                        </div>
+                        <div class="flex gap-3">
+                            <button class="flex-1 bg-primary hover:bg-primary/90 text-white py-2 rounded-lg transition-colors shadow-lg hover:shadow-primary/30">
+                                购买电子版
+                            </button>
+                            <button class="flex-1 bg-white/10 hover:bg-white/20 text-white py-2 rounded-lg transition-colors">
+                                实体打印
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 商品 3 - 可以修改商品信息和图片 -->
+                <div class="frosted rounded-xl overflow-hidden shadow-md card-hover">
+                    <div class="relative">
+                        <!-- 可以替换图片：将下面的src地址替换成其他图片链接 -->
+                        <img src="https://picsum.photos/id/15/600/400" alt="纳木错星空照片" class="w-full h-64 object-cover">
+                        <div class="absolute top-4 right-4 bg-accent text-white text-sm font-bold px-3 py-1 rounded-full">
+                            新品
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2 text-white">纳木错星空</h3>
+                        <p class="text-gray-300 mb-4">高清摄影作品，记录高原湖泊的璀璨星空</p>
+                        <div class="flex justify-between items-center mb-4">
+                            <div>
+                                <span class="text-2xl font-bold text-white">¥69</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fa fa-star text-yellow-400"></i>
+                                <i class="fa fa-star text-yellow-400"></i>
+                                <i class="fa fa-star text-yellow-400"></i>
+                                <i class="fa fa-star text-yellow-400"></i>
+                                <i class="fa fa-star text-yellow-400"></i>
+                                <span class="text-gray-400 text-sm ml-1">(12)</span>
+                            </div>
+                        </div>
+                        <div class="flex gap-3">
+                            <button class="flex-1 bg-primary hover:bg-primary/90 text-white py-2 rounded-lg transition-colors shadow-lg hover:shadow-primary/30">
+                                购买电子版
+                            </button>
+                            <button class="flex-1 bg-white/10 hover:bg-white/20 text-white py-2 rounded-lg transition-colors">
+                                实体打印
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 查看更多商品 -->
+            <div class="text-center mt-12">
+                <a href="#" class="inline-block bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-full transition-all shadow-lg hover:shadow-primary/30">
+                    浏览更多作品 <i class="fa fa-shopping-cart ml-2"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 联系我 -->
+    <section id="contact" class="py-20 relative">
+        <div class="container mx-auto px-4 relative z-10">
+            <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-title text-center mb-4 diamond-text">联系我</h2>
+            <p class="text-center text-gray-300 max-w-2xl mx-auto mb-16">如果你有任何问题或合作意向，欢迎通过以下方式联系我</p>
+            
+            <div class="max-w-4xl mx-auto frosted p-8 rounded-xl shadow-md">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- 联系信息 -->
+                    <div>
+                        <h3 class="text-xl font-bold mb-6 text-white">联系方式</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-start">
+                                <div class="bg-primary/10 p-3 rounded-full text-secondary mr-4">
+                                    <i class="fa fa-envelope"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold mb-1 text-white">电子邮箱</h4>
+                                    <p class="text-gray-300">xinstory@example.com</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="bg-primary/10 p-3 rounded-full text-secondary mr-4">
+                                    <i class="fa fa-phone"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold mb-1 text-white">电话</h4>
+                                    <p class="text-gray-300">138 **** 5678</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="bg-primary/10 p-3 rounded-full text-secondary mr-4">
+                                    <i class="fa fa-map-marker"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold mb-1 text-white">学校地址</h4>
+                                    <p class="text-gray-300">北京市海淀区中关村大街59号</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 社交媒体 -->
+                        <div class="mt-8">
+                            <h3 class="text-xl font-bold mb-4 text-white">关注我</h3>
+                            <div class="flex space-x-4">
+                                <a href="#" class="bg-[#1DA1F2]/10 hover:bg-[#1DA1F2]/20 text-[#1DA1F2] w-10 h-10 rounded-full flex items-center justify-center transition-colors" title="微博">
+                                    <i class="fa fa-weibo"></i>
+                                </a>
+                                <a href="#" class="bg-[#07C160]/10 hover:bg-[#07C160]/20 text-[#07C160] w-10 h-10 rounded-full flex items-center justify-center transition-colors" title="微信">
+                                    <i class="fa fa-weixin"></i>
+                                </a>
+                                <a href="#" class="bg-[#FE2C55]/10 hover:bg-[#FE2C55]/20 text-[#FE2C55] w-10 h-10 rounded-full flex items-center justify-center transition-colors" title="抖音">
+                                    <i class="fa fa-music"></i>
+                                </a>
+                                <a href="#" class="bg-[#FF2442]/10 hover:bg-[#FF2442]/20 text-[#FF2442] w-10 h-10 rounded-full flex items-center justify-center transition-colors" title="小红书">
+                                    <i class="fa fa-book"></i>
+                                </a>
+                                <a href="#" class="bg-[#E1306C]/10 hover:bg-[#E1306C]/20 text-[#E1306C] w-10 h-10 rounded-full flex items-center justify-center transition-colors" title="Instagram">
+                                    <i class="fa fa-instagram"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 联系表单 -->
+                    <div>
+                        <h3 class="text-xl font-bold mb-6 text-white">发送消息</h3>
+                        <form>
+                            <div class="mb-4">
+                                <label for="contact-name" class="block text-sm font-medium text-gray-300 mb-1">你的名字</label>
+                                <input type="text" id="contact-name" class="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-lg focus:ring-2 focus:ring-secondary focus:border-secondary transition-colors text-white" placeholder="请输入你的名字">
+                            </div>
+                            <div class="mb-4">
+                                <label for="contact-email" class="block text-sm font-medium text-gray-300 mb-1">电子邮箱</label>
+                                <input type="email" id="contact-email" class="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-lg focus:ring-2 focus:ring-secondary focus:border-secondary transition-colors text-white" placeholder="请输入你的邮箱">
+                            </div>
+                            <div class="mb-4">
+                                <label for="contact-subject" class="block text-sm font-medium text-gray-300 mb-1">主题</label>
+                                <input type="text" id="contact-subject" class="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-lg focus:ring-2 focus:ring-secondary focus:border-secondary transition-colors text-white" placeholder="请输入消息主题">
+                            </div>
+                            <div class="mb-6">
+                                <label for="contact-message" class="block text-sm font-medium text-gray-300 mb-1">消息内容</label>
+                                <textarea id="contact-message" rows="4" class="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-lg focus:ring-2 focus:ring-secondary focus:border-secondary transition-colors text-white" placeholder="请输入你的消息内容"></textarea>
+                            </div>
+                            <button type="submit" class="w-full bg-primary hover:bg-primary/90 text-white py-3 rounded-lg transition-colors shadow-lg hover:shadow-primary/30">
+                                发送消息
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="py-12 relative">
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <h3 class="text-2xl font-title diamond-text mb-4">欣故事</h3>
+                    <p class="text-gray-400 mb-4">记录雪山攀登的每一刻，分享旅途中的美好</p>
+                    <p class="text-gray-500 text-sm">© 2023 欣故事. 保留所有权利</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-lg mb-4 text-white">快速链接</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#home" class="text-gray-400 hover:text-secondary transition-colors">首页</a></li>
+                        <li><a href="#travel" class="text-gray-400 hover:text-secondary transition-colors">旅行日记</a></li>
+                        <li><a href="#photos" class="text-gray-400 hover:text-secondary transition-colors">风景合集</a></li>
+                        <li><a href="#music" class="text-gray-400 hover:text-secondary transition-colors">我的音乐</a></li>
+                        <li><a href="#store" class="text-gray-400 hover:text-secondary transition-colors">照片商店</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-lg mb-4 text-white">更多内容</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#behind" class="text-gray-400 hover:text-secondary transition-colors">创作幕后</a></li>
+                        <li><a href="#message" class="text-gray-400 hover:text-secondary transition-colors">留言板</a></li>
+                        <li><a href="#contact" class="text-gray-400 hover:text-secondary transition-colors">联系我</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-secondary transition-colors">关于网站</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-secondary transition-colors">隐私政策</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-lg mb-4 text-white">订阅更新</h4>
+                    <p class="text-gray-400 mb-4">订阅我的登山更新，获取最新照片和故事</p>
+                    <form class="flex">
+                        <input type="email" placeholder="你的邮箱地址" class="px-4 py-2 rounded-l-lg w-full focus:outline-none bg-white/10 border border-white/20 text-white">
+                        <button type="submit" class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-r-lg transition-colors shadow-lg hover:shadow-primary/30">
+                            <i class="fa fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-8 text-center text-gray-500 text-sm">
+                <p>本网站分享雪山攀登经历和摄影作品，记录大学生的探险故事</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 返回顶部按钮 -->
+    <button id="back-to-top" class="fixed bottom-8 right-8 bg-primary hover:bg-primary/90 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg transition-all opacity-0 invisible z-50">
+        <i class="fa fa-chevron-up"></i>
+    </button>
+
+    <!-- JavaScript -->
+    <script>
+        // 移动端菜单切换
+        const menuToggle = document.getElementById('menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        menuToggle.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            // 切换图标
+            const icon = menuToggle.querySelector('i');
+            if (icon.classList.contains('fa-bars')) {
+                icon.classList.replace('fa-bars', 'fa-times');
+            } else {
+                icon.classList.replace('fa-times', 'fa-bars');
+            }
+        });
+        
+        // 导航栏滚动效果
+        const nav = document.getElementById('main-nav');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                nav.classList.add('py-2', 'shadow-md');
+                nav.classList.remove('py-4');
+            } else {
+                nav.classList.add('py-4');
+                nav.classList.remove('py-2', 'shadow-md');
+            }
+        });
+        
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                // 关闭移动菜单（如果打开）
+                if (!mobileMenu.classList.contains('hidden')) {
+                    mobileMenu.classList.add('hidden');
+                    const icon = menuToggle.querySelector('i');
+                    icon.classList.replace('fa-times', 'fa-bars');
+                }
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80, // 考虑导航栏高度
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // 返回顶部按钮
+        const backToTopButton = document.getElementById('back-to-top');
+        
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 500) {
+                backToTopButton.classList.remove('opacity-0', 'invisible');
+                backToTopButton.classList.add('opacity-100', 'visible');
+            } else {
+                backToTopButton.classList.add('opacity-0', 'invisible');
+                backToTopButton.classList.remove('opacity-100', 'visible');
+            }
+        });
+        
+        backToTopButton.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+        
+        // 横向滚动控制
+        const scrollLeftBtn = document.querySelector('.fa-chevron-left').parentElement;
+        const scrollRightBtn = document.querySelector('.fa-chevron-right').parentElement;
+        const scrollContainer = document.querySelector('#music .overflow-x-auto');
+        
+        if (scrollLeftBtn && scrollRightBtn && scrollContainer) {
+            scrollLeftBtn.addEventListener('click', () => {
+                scrollContainer.scrollBy({ left: -300, behavior: 'smooth' });
+            });
+            
+            scrollRightBtn.addEventListener('click', () => {
+                scrollContainer.scrollBy({ left: 300, behavior: 'smooth' });
+            });
+        }
+        
+        // 鼠标移动与背景交互效果 - 视差效果
+        const globalBg = document.getElementById('global-bg');
+        
+        document.addEventListener('mousemove', (e) => {
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            
+            // 计算移动距离，数值越大移动越明显
+            const moveX = (x - 0.5) * 30;
+            const moveY = (y - 0.5) * 30;
+            
+            globalBg.style.transform = `translateX(${moveX}px) translateY(${moveY}px)`;
+        });
+        
+        // 创建雪花效果
+        function createSnowflakes() {
+            // 只在桌面端显示雪花
+            if (window.innerWidth < 768) return;
+            
+            const snowContainer = document.createElement('div');
+            snowContainer.style.position = 'fixed';
+            snowContainer.style.top = '0';
+            snowContainer.style.left = '0';
+            snowContainer.style.width = '100%';
+            snowContainer.style.height = '100%';
+            snowContainer.style.pointerEvents = 'none';
+            snowContainer.style.zIndex = '1';
+            document.body.appendChild(snowContainer);
+            
+            // 创建50个雪花
+            for (let i = 0; i < 50; i++) {
+                const snowflake = document.createElement('div');
+                snowflake.classList.add('snowflake');
+                
+                // 随机大小
+                const size = Math.random() * 5 + 1;
+                snowflake.style.width = `${size}px`;
+                snowflake.style.height = `${size}px`;
+                
+                // 随机位置
+                snowflake.style.left = `${Math.random() * 100}%`;
+                snowflake.style.top = `-${size}px`;
+                
+                // 随机动画时长
+                const duration = Math.random() * 10 + 5;
+                snowflake.style.animationDuration = `${duration}s`;
+                
+                // 随机动画延迟
+                snowflake.style.animationDelay = `${Math.random() * 10}s`;
+                
+                snowContainer.appendChild(snowflake);
+            }
+        }
+        
+        // 页面加载完成后创建雪花
+        window.addEventListener('load', createSnowflakes);
+    </script>
+
+</body></html>
