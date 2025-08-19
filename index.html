@@ -489,22 +489,60 @@
             <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-title text-center mb-4 diamond-text">登山必备音乐</h2>
             <p class="text-center text-gray-300 max-w-2xl mx-auto mb-16">攀登途中总少不了音乐的陪伴，这些是我最喜欢的歌曲</p>
             
-            <!-- 音乐播放器区域 -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
-                <!-- 网易云音乐播放器 - 可以替换成你自己的播放器链接 -->
-                <div class="frosted p-6 rounded-xl shadow-md">
-                    <h3 class="text-xl font-bold mb-4 flex items-center text-white">
-                        <i class="fa fa-music text-red-500 mr-2"></i> 网易云音乐播放列表
-                    </h3>
-                    <!-- 这里是网易云音乐播放器，可以替换成你自己的歌单 -->
-                    <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="100%" height="330" src="https://music.163.com/outchain/player?type=0&amp;id=2481312407&amp;auto=1&amp;height=330">
-                    </iframe>
-                </div>
-                
-                <!-- QQ音乐播放器 - 可以替换成你自己的播放器链接 -->
-                <div class="frosted p-6 rounded-xl shadow-md">
-                    <h3 class="text-xl font-bold mb-4 flex items-center text-white">
-                        <i class="fa fa-headphones text-green-500 mr-2"></i> QQ音乐播放列表
+            <!-- 音乐播放器 -->
+<div class="music-player">
+  <h3>背景音乐</h3>
+  <!-- 音乐播放控制 -->
+  <audio id="myAudio" controls style="width:100%; margin:10px 0;">
+    您的浏览器不支持音频播放
+  </audio>
+  
+  <!-- 歌曲列表 -->
+  <div id="songList" style="margin-top:10px;"></div>
+</div>
+
+<script>
+// 替换成你复制的歌单ID（例如 12345678）
+const playlistId = "国产摇滚乐队";
+
+// 从免费API获取歌曲列表（无需自己搭建服务器）
+fetch(`https://autumnfish.cn/playlist/detail?id=${playlistId}`)
+  .then(response => response.json())
+  .then(data => {
+    const songs = data.playlist.tracks.slice(0, 5); // 取前5首歌
+    const songList = document.getElementById("songList");
+    const audio = document.getElementById("myAudio");
+
+    // 显示第一首歌
+    if (songs.length > 0) {
+      loadSong(songs[0]);
+    }
+
+    // 生成歌曲列表
+    songs.forEach(song => {
+      const songItem = document.createElement("div");
+      songItem.style.padding = "5px";
+      songItem.style.borderBottom = "1px solid #eee";
+      songItem.style.cursor = "pointer";
+      songItem.textContent = song.name + " - " + song.ar[0].name;
+      
+      // 点击歌曲切换播放
+      songItem.onclick = () => loadSong(song);
+      songList.appendChild(songItem);
+    });
+
+    // 加载歌曲的函数
+    function loadSong(song) {
+      // 获取歌曲播放地址
+      fetch(`https://autumnfish.cn/song/url?id=${song.id}`)
+        .then(res => res.json())
+        .then(urlData => {
+          audio.src = urlData.data[0].url; // 设置播放地址
+          audio.play(); // 自动播放
+        });
+    }
+  });
+</script>
                     </h3>
                     <!-- 这里是QQ音乐播放器，可以替换成你自己的歌单 -->
                     <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="100%" height="330" src="https://y.qq.com/w/player.html?vid=u00328t08g6">
@@ -1213,5 +1251,6 @@
         // 页面加载完成后创建雪花
         window.addEventListener('load', createSnowflakes);
     </script>
+
 
 </body></html>
